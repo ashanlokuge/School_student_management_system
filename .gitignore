@@ -1,0 +1,16 @@
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore database files
+school.db
+identifier.sqlite
+
+# Ignore IDE settings
+.idea/
+
+# Ignore system-specific files
+.DS_Store  # macOS
+Thumbs.db  # Windows
