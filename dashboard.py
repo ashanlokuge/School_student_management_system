@@ -1,37 +1,48 @@
 import tkinter as tk
-from tkinter import messagebox
+from views import manage_students
 
-# Function to open student management (Placeholder)
-def open_students():
-    messagebox.showinfo("Students", "Student Management Coming Soon!")
+class DashboardApp:
+    def __init__(self, root, username):
+        self.root = root
+        self.root.title("School Marks Management System")
+        self.root.geometry("500x400")
+        self.username = username
 
-# Function to open subject management (Placeholder)
-def open_subjects():
-    messagebox.showinfo("Subjects", "Subject Management Coming Soon!")
+        self.frame_dashboard = tk.Frame(root)
+        self.frame_dashboard.pack(fill="both", expand=True)
+        self.frame_student_view = tk.Frame(root)
+        self.show_dashboard()
 
-# Function to open marks entry (Placeholder)
-def open_marks():
-    messagebox.showinfo("Marks", "Marks Entry Coming Soon!")
+    def show_dashboard(self):
+        for widget in self.frame_dashboard.winfo_children():
+            widget.destroy()
 
-# Logout function
-def logout(root):
-    root.destroy()  # Close the dashboard
-    import gui  # Restart login window
+        tk.Label(self.frame_dashboard, text=f"Welcome, {self.username}!", font=("Arial", 16, "bold")).pack(pady=20)
 
-# Main dashboard function
+        tk.Button(self.frame_dashboard, text="Manage Students", command=self.show_student_view, width=20, height=2, bg="blue", fg="white").pack(pady=10)
+        tk.Button(self.frame_dashboard, text="Manage Subjects", command=self.show_subject_view, width=20, height=2, bg="blue", fg="white").pack(pady=10)
+        tk.Button(self.frame_dashboard, text="Enter Marks", command=self.show_marks_view, width=20, height=2, bg="blue", fg="white").pack(pady=10)
+        tk.Button(self.frame_dashboard, text="Logout", command=self.logout, width=20, height=2, bg="red", fg="white").pack(pady=20)
+
+    def show_student_view(self):
+        self.frame_dashboard.pack_forget()
+        manage_students(self.frame_student_view, self)
+        self.frame_student_view.pack(fill="both", expand=True)
+
+    def show_subject_view(self):
+        """Switch to the subject management view."""
+        pass
+
+    def show_marks_view(self):
+        """Switch to the marks entry view."""
+        # Similar to show_student_view, add logic to show marks entry
+        pass
+
+    def logout(self):
+        """Log out by destroying the root window."""
+        self.root.destroy()
+
 def open_dashboard(username):
     root = tk.Tk()
-    root.title("School Marks Management System")
-    root.geometry("500x400")
-
-    tk.Label(root, text=f"Welcome, {username}!", font=("Arial", 16, "bold")).pack(pady=20)
-
-    # Navigation buttons
-    tk.Button(root, text="Manage Students", command=open_students, width=20, height=2, bg="blue", fg="white").pack(pady=10)
-    tk.Button(root, text="Manage Subjects", command=open_subjects, width=20, height=2, bg="blue", fg="white").pack(pady=10)
-    tk.Button(root, text="Enter Marks", command=open_marks, width=20, height=2, bg="blue", fg="white").pack(pady=10)
-
-    # Logout button
-    tk.Button(root, text="Logout", command=lambda: logout(root), width=20, height=2, bg="red", fg="white").pack(pady=20)
-
+    app = DashboardApp(root, username)
     root.mainloop()
