@@ -49,4 +49,3 @@ register_button = tk.Button(root, text="Create Account", command=register_user, 
 register_button.pack(pady=5)
 
 root.mainloop()
-
