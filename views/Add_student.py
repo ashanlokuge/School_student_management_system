@@ -1,16 +1,15 @@
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
+from tkcalendar import DateEntry
 from PIL import Image, ImageTk
-from models.student_model import add_student  # Import the function to add students to the database
+from models.student_model import add_student
+from views.student_view import manage_students
 
-def open_add_student_window(parent_frame, dashboard):
-    # Create a new top-level window for adding a student
-    add_student_window = tk.Toplevel(parent_frame)
-    add_student_window.title("Add Student")
-    add_student_window.geometry("500x600")
+def show_add_student_form(parent_frame, dashboard):
+    for widget in parent_frame.winfo_children():
+        widget.destroy()
 
-    # Frame for the form
-    form_frame = tk.Frame(add_student_window)
+    form_frame = tk.Frame(parent_frame)
     form_frame.pack(pady=20)
 
     # Student ID
@@ -25,15 +24,15 @@ def open_add_student_window(parent_frame, dashboard):
 
     # Birthday
     tk.Label(form_frame, text="Birthday:", font=("Arial", 12)).grid(row=2, column=0, padx=10, pady=5, sticky="e")
-    birthday_entry = tk.Entry(form_frame, font=("Arial", 12))
+    birthday_entry = DateEntry(form_frame, font=("Arial", 12), date_pattern="yyyy-mm-dd")  # Use DateEntry
     birthday_entry.grid(row=2, column=1, padx=10, pady=5)
 
-    # Address (City)
+    # Address
     tk.Label(form_frame, text="City:", font=("Arial", 12)).grid(row=3, column=0, padx=10, pady=5, sticky="e")
     city_entry = tk.Entry(form_frame, font=("Arial", 12))
     city_entry.grid(row=3, column=1, padx=10, pady=5)
 
-    # Grade (Dropdown)
+    # Grade
     tk.Label(form_frame, text="Grade:", font=("Arial", 12)).grid(row=4, column=0, padx=10, pady=5, sticky="e")
     grade_var = tk.StringVar()
     grade_dropdown = ttk.Combobox(form_frame, textvariable=grade_var, font=("Arial", 12), state="readonly")
@@ -77,7 +76,7 @@ def open_add_student_window(parent_frame, dashboard):
     def save_student():
         student_id = student_id_entry.get()
         student_name = student_name_entry.get()
-        birthday = birthday_entry.get()
+        birthday = birthday_entry.get()  # Get the selected date from DateEntry
         city = city_entry.get()
         grade = grade_var.get()
         gender = gender_var.get()
@@ -91,9 +90,9 @@ def open_add_student_window(parent_frame, dashboard):
         # Save to database
         add_student(student_id, student_name, birthday, city, grade, gender, religion, profile_picture)
         messagebox.showinfo("Success", "Student added successfully!")
-        add_student_window.destroy()  # Close the window after saving
+        manage_students(parent_frame, dashboard)  # Return to the Manage Students page
 
     tk.Button(form_frame, text="Save", command=save_student, font=("Arial", 12), bg="green", fg="white").grid(row=9, column=1, padx=10, pady=20)
 
     # Back Button
-    tk.Button(form_frame, text="Back", command=add_student_window.destroy, font=("Arial", 12), bg="grey", fg="white").grid(row=9, column=0, padx=10, pady=20)
+    tk.Button(form_frame, text="Back", command=lambda: manage_students(parent_frame, dashboard), font=("Arial", 12), bg="grey", fg="white").grid(row=9, column=0, padx=10, pady=20)
